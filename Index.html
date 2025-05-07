@@ -1,78 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login Page</title>
+  <meta charset="UTF-8">
+  <title>Login</title>
   <style>
-    body {
-      font-family: Arial;
-      background: #f0f0f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .login-box {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #aaa;
-      width: 300px;
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 20px;
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-    .error {
-      color: red;
-      margin-top: 10px;
-    }
+    body { font-family: Arial; text-align: center; padding-top: 100px; background: #f0f2f5; }
+    form { background: white; padding: 30px; border-radius: 12px; display: inline-block; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    input { margin: 10px 0; padding: 10px; width: 250px; border-radius: 6px; border: 1px solid #ccc; }
+    button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    #message { margin-top: 15px; color: red; }
   </style>
 </head>
 <body>
-  <div class="login-box">
+  <form onsubmit="login(event)">
     <h2>Login</h2>
-    <input type="text" id="username" placeholder="Username" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <button onclick="login()">Login</button>
-    <div class="error" id="errorMsg"></div>
-  </div>
+    <input type="email" id="email" placeholder="Email" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button type="submit">Login</button>
+    <p id="message"></p>
+  </form>
 
   <script>
-    async function login() {
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
+    async function login(event) {
+      event.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const message = document.getElementById("message");
+      message.textContent = "Checking...";
 
-      const formData = new URLSearchParams();
-      formData.append("username", username);
-      formData.append("password", password);
-
-      // Replace with your Apps Script URL
-      const scriptURL = "https://script.google.com/macros/s/AKfycbzJ3qT1yv6vwl6GsL6__Qjg08d3gpIN2JcDgzhYdvnOXvteEO7HST_UY4_Hw0O8Hxs2uA/exec";
-
-      try {
-        const response = await fetch(scriptURL, {
-          method: "POST",
-          body: formData
-        });
-
-        const text = await response.text();
-        if (text === "success") {
-          window.location.href = "https://sites.google.com/view/breck-jrotc/cadet-splash-page";
-        } else {
-          document.getElementById("errorMsg").innerText = "Invalid login. Try again.";
+      const response = await fetch("YOUR_GOOGLE_SCRIPT_URL", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json"
         }
-      } catch (err) {
-        document.getElementById("errorMsg").innerText = "Error connecting to server.";
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        window.location.href = "members.html";
+      } else {
+        message.textContent = result.message || "Login failed.";
       }
     }
   </script>
