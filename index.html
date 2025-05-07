@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <style>
+    body { font-family: Arial; padding: 2em; max-width: 300px; margin: auto; }
+    input, button { width: 100%; padding: 8px; margin: 6px 0; }
+    button { background: #4285F4; color: white; border: none; cursor: pointer; }
+    #message { color: red; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <div id="message"></div>
+  <script>
+    async function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const res = await fetch("https://script.google.com/macros/s/AKfycbxHd1oEGvOyc3zlz1eEkhuMgMwzlSNZssgx_I7QadKzhUQGuaL15mH7PT_I9r7_dhFY/exec", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        window.location.href = "https://sites.google.com/view/breck-jrotc/cadet-splash-page";
+      } else {
+        document.getElementById("message").innerText = "Invalid login.";
+      }
+    }
+  </script>
+</body>
+</html>
